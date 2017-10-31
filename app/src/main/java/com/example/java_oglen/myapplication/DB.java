@@ -35,6 +35,14 @@ public class DB extends SQLiteOpenHelper {
 
         db.execSQL(sql);
     }
+    public void delKisi(String id)
+    {
+        db = getWritableDatabase();
+        String sql  ="delete from kisiler where kid = "+id;
+        Log.e("x","DEL : "+sql);
+        db.execSQL(sql);
+        db.close();
+    }
     public void addKisi(String adi, String soyadi, String mail, String tel)
     {
         db = getWritableDatabase();

@@ -1,14 +1,17 @@
 package com.example.java_oglen.myapplication;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,7 +21,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener{
 
     DB db;
     ArrayList<Kisi> dS = new ArrayList<>();
@@ -107,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
         };
         lv.setAdapter(ba);
 
+        lv.setOnItemLongClickListener(MainActivity.this);
+
     }
     protected void onResume()
     {
@@ -119,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     //data oku
-    public void dataOku()
+   /* public void dataOku()
     {
         SQLiteDatabase oku=new DB(this).getReadableDatabase();
         Cursor cr=oku.query("kisiler",null,null,null,null,null,null);
@@ -129,5 +134,30 @@ public class MainActivity extends AppCompatActivity {
             Log.e("Adi",adi);
         }
 
+    }*/
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int pos, long l)
+    {
+
+        final int id = dS.get(pos).id;
+
+        AlertDialog.Builder adb = new AlertDialog.Builder(MainActivity.this);
+        adb.setTitle("Silme Onayı")
+                .setMessage("Emin misiniz ?")
+                .setNegativeButton("Hayır",  null)
+                .setPositiveButton("Evet", new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        db.delKisi(""+id);
+                        dialogInterface.dismiss();
+                        onResume();
+
+                    }
+                });
+
+        adb.show();
+        return true;
     }
 }
